@@ -54,15 +54,16 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                         builder: (BuildContext context) {
                           return Dialog(
                             elevation: 0.0,
-                            backgroundColor: Colors.greenAccent,
+                            backgroundColor: Colors.white.withOpacity(0.1),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20.0),
                             ),
                             child: Container(
+                              padding: EdgeInsets.all(20.0),
                               height: 200.0,
                               child: Column(
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     'Create New Playlist',
@@ -73,20 +74,23 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                                   Form(
                                     key: _formKey,
                                     child: TextFormField(
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold),
                                       controller: nameController,
                                       decoration: InputDecoration(
                                         focusedBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
                                             width: 1,
-                                            color: Colors.black,
+                                            color: Colors.red,
                                           ),
                                           borderRadius:
                                               BorderRadius.circular(50.0),
                                         ),
                                         enabledBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
+                                          borderSide: const BorderSide(
                                             width: 1,
-                                            color: Colors.black,
+                                            color: Colors.blue,
                                           ),
                                           borderRadius:
                                               BorderRadius.circular(50.0),
@@ -107,23 +111,23 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                                     children: [
                                       IconButton(
                                         onPressed: (() {
+                                          Navigator.pop(context);
+                                        }),
+                                        icon: const Icon(
+                                          Icons.close,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      IconButton(
+                                        onPressed: (() {
                                           if (_formKey.currentState!
                                               .validate()) {
                                             whenButtonClicked();
                                             Navigator.pop(context);
                                           }
                                         }),
-                                        icon: Icon(
+                                        icon: const Icon(
                                           Icons.done,
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                      IconButton(
-                                        onPressed: (() {
-                                          Navigator.pop(context);
-                                        }),
-                                        icon: Icon(
-                                          Icons.close,
                                           color: Colors.white,
                                         ),
                                       ),
@@ -144,7 +148,7 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                 ],
               ),
               body: Hive.box<MusicModel>('playlistDB').isEmpty
-                  ? Center(
+                  ? const Center(
                       child: Text(
                         'Press + To Create Playlist',
                         style: TextStyle(
@@ -154,51 +158,46 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                       ),
                     )
                   : ListView.separated(
+                      padding: const EdgeInsets.all(15.0),
                       itemBuilder: ((BuildContext context, int index) {
                         final data = musicList.values.toList()[index];
-                        return ValueListenableBuilder(
-                            valueListenable:
-                                Hive.box<MusicModel>('playlistDB').listenable(),
-                            builder: (BuildContext context,
-                                Box<MusicModel> musicList, Widget? child) {
-                              return ListTile(
-                                shape: RoundedRectangleBorder(
-                                  side: BorderSide(
-                                    width: 1.0,
-                                    color: Colors.white,
-                                  ),
-                                  borderRadius: BorderRadius.circular(20.0),
-                                ),
-                                title: Text(
-                                  data.name,
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                trailing: IconButton(
-                                  onPressed: () {
-                                    musicList.deleteAt(index);
-                                  },
-                                  icon: Icon(
-                                    Icons.delete,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: ((BuildContext context) {
-                                        return PlaylistSongDisplayScreen(
-                                          playlist: data,
-                                          folderindex: index,
-                                        );
-                                      }),
-                                    ),
+                        return ListTile(
+                          shape: RoundedRectangleBorder(
+                            side: BorderSide(
+                              width: 1.0,
+                              color: Colors.white,
+                            ),
+                            borderRadius: BorderRadius.circular(20.0),
+                          ),
+                          title: Text(
+                            data.name,
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          trailing: IconButton(
+                            onPressed: () {
+                              musicList.deleteAt(index);
+                            },
+                            icon: Icon(
+                              Icons.delete,
+                              color: Colors.white,
+                            ),
+                          ),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: ((BuildContext context) {
+                                  return PlaylistSongDisplayScreen(
+                                    playlist: data,
+                                    folderindex: index,
                                   );
-                                },
-                              );
-                            });
+                                }),
+                              ),
+                            );
+                          },
+                        );
                       }),
                       separatorBuilder: ((BuildContext context, int index) {
                         return SizedBox(
@@ -218,7 +217,7 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
         songId: [],
         name: name,
       );
-      PlayListDB().playlistAdd(music);
+      PlayListDB.playlistAdd(music);
       nameController.clear();
     }
   }

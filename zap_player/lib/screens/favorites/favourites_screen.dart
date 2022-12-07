@@ -79,18 +79,18 @@ class FavoriteScreen extends StatelessWidget {
                         trailing: IconButton(onPressed: (() {
                           FavoriteDb.favoriteSongs.notifyListeners();
                                     FavoriteDb.delete(favoriteData[index].id);
-                                    const snackbar = SnackBar(
-                                      backgroundColor: Colors.red,
-                                      content: Text(
-                                        'Song deleted from your favorites',
-                                        style: TextStyle(color: Colors.white),
-                                      ),
-                                      duration: Duration(
-                                        seconds: 1,
-                                      ),
-                                    );
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(snackbar);
+                                    // const snackbar = SnackBar(
+                                    //   backgroundColor: Colors.red,
+                                    //   content: Text(
+                                    //     'Song deleted from your favorites',
+                                    //     style: TextStyle(color: Colors.white),
+                                    //   ),
+                                    //   duration: Duration(
+                                    //     seconds: 1,
+                                    //   ),
+                                    // );
+                                    // ScaffoldMessenger.of(context)
+                                    //     .showSnackBar(snackbar);
                         }), icon: Icon(Icons.delete)),
                       );
                     }),

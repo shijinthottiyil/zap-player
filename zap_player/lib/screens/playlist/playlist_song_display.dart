@@ -1,3 +1,5 @@
+// import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:on_audio_query/on_audio_query.dart';
@@ -22,16 +24,19 @@ class _PlaylistSongDisplayScreenState extends State<PlaylistSongDisplayScreen> {
   late List<SongModel> playlistsong;
   @override
   void initState() {
-    PlayListDB().getAllPlaylist();
+    PlayListDB.getAllPlaylist();
+    // log('dtgy');
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
-    PlayListDB().getAllPlaylist();
+    // PlayListDB.getAllPlaylist();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
         title: Text(widget.playlist.name),
+        centerTitle: true,
         actions: [
           IconButton(
             onPressed: (() {
@@ -57,12 +62,17 @@ class _PlaylistSongDisplayScreenState extends State<PlaylistSongDisplayScreen> {
             playlistsong = listPlaylist(
               value.values.toList()[widget.folderindex].songId,
             );
+
+            // log(playlistsong.toString());
+
             return playlistsong.isEmpty
                 ? const Center(
                     child: Text(
                       'Press + To Add Songs',
-                      style: TextStyle(color: Colors.white,
-                          fontWeight: FontWeight.bold, fontSize: 20.0),
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20.0),
                     ),
                   )
                 : ListView.separated(
@@ -101,6 +111,7 @@ class _PlaylistSongDisplayScreenState extends State<PlaylistSongDisplayScreen> {
                             borderRadius: BorderRadius.circular(40)),
                         onTap: () {
                           List<SongModel> newlist = [...playlistsong];
+                          GetSongs.player.stop();
                           GetSongs.player.setAudioSource(
                               GetSongs.createSongList(newlist),
                               initialIndex: index);
@@ -108,7 +119,7 @@ class _PlaylistSongDisplayScreenState extends State<PlaylistSongDisplayScreen> {
                           Navigator.push(context,
                               MaterialPageRoute(builder: ((context) {
                             return NowPlaying(
-                              songModelList: playlistsong,
+                              songModelList: GetSongs.playingSongs,
                             );
                           })));
                         },
@@ -133,14 +144,16 @@ class _PlaylistSongDisplayScreenState extends State<PlaylistSongDisplayScreen> {
     List<int> data,
   ) {
     List<SongModel> plsongs = [];
+
     for (int i = 0; i < GetSongs.songscopy.length; i++) {
+      // log(GetSongs.songscopy.isEmpty.toString());
       for (int j = 0; j < data.length; j++) {
         if (GetSongs.songscopy[i].id == data[j]) {
           plsongs.add(GetSongs.songscopy[i]);
         }
       }
     }
+    // log(plsongs.isEmpty.toString());
     return plsongs;
   }
 }
-

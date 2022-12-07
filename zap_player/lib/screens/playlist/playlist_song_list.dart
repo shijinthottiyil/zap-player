@@ -1,5 +1,8 @@
+// import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:on_audio_query/on_audio_query.dart';
+// import 'package:zap_player/controller/song_controller.dart';
 import 'package:zap_player/db/functions/playlist_db.dart';
 import 'package:zap_player/db/model/music_model.dart';
 
@@ -7,15 +10,14 @@ class PlaylistSongListScreen extends StatefulWidget {
   const PlaylistSongListScreen({Key? key, required this.playlist})
       : super(key: key);
 
-  final  MusicModel playlist;
-  
+  final MusicModel playlist;
 
   @override
   State<PlaylistSongListScreen> createState() => _PlaylistSongState();
 }
 
 class _PlaylistSongState extends State<PlaylistSongListScreen> {
-  final OnAudioQuery playlistAudioQuery = OnAudioQuery();
+  final OnAudioQuery audioQuery = OnAudioQuery();
 
   @override
   Widget build(BuildContext context) {
@@ -23,9 +25,10 @@ class _PlaylistSongState extends State<PlaylistSongListScreen> {
       appBar: AppBar(
         backgroundColor: Colors.black,
         title: Text('ADD SONGS'),
+        centerTitle: true,
       ),
       body: FutureBuilder<List<SongModel>>(
-          future: playlistAudioQuery.querySongs(
+          future: audioQuery.querySongs(
             sortType: null,
             orderType: OrderType.ASC_OR_SMALLER,
             uriType: UriType.EXTERNAL,
@@ -92,7 +95,7 @@ class _PlaylistSongState extends State<PlaylistSongListScreen> {
                             playlistCheck(item.data![index]);
 
                             // playlistnotifier.notifyListeners();
-                            PlayListDB().playlistnotifier.notifyListeners();
+                            PlayListDB.playlistnotifier.notifyListeners();
                           });
                         }),
                         icon: !widget.playlist.isValueIn(item.data![index].id)
@@ -112,13 +115,15 @@ class _PlaylistSongState extends State<PlaylistSongListScreen> {
     if (!widget.playlist.isValueIn(data.id)) {
       widget.playlist.add(data.id);
 
-      const snackbar = SnackBar(
-          backgroundColor: Color.fromARGB(255, 255, 255, 255),
-          content: Text(
-            'song Added to Playlist',
-            style: TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
-          ));
-      ScaffoldMessenger.of(context).showSnackBar(snackbar);
+      // log('song added');
+
+      // const snackbar = SnackBar(
+      //     backgroundColor: Color.fromARGB(255, 255, 255, 255),
+      //     content: Text(
+      //       'song Added to Playlist',
+      //       style: TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
+      //     ));
+      // ScaffoldMessenger.of(context).showSnackBar(snackbar);
     }
   }
 }

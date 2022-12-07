@@ -24,7 +24,6 @@ class _NowPlayingState extends State<NowPlaying> {
 
   int _currentIndex = 0;
   bool _isShuffle = false;
-   
 
   @override
   void initState() {
@@ -59,6 +58,8 @@ class _NowPlayingState extends State<NowPlaying> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          title: Text('NOW PLAYING'),
+          centerTitle: true,
           backgroundColor: Colors.transparent,
           elevation: 0,
           leading: IconButton(
@@ -91,11 +92,8 @@ class _NowPlayingState extends State<NowPlaying> {
                 artworkFit: BoxFit.cover,
                 nullArtworkWidget: ClipRRect(
                   borderRadius: BorderRadius.circular(20.0),
-                  child: Image.asset(
-                      'assets/images/splash_screen_logo.png',
-                      height: 200,
-                      width: 200,
-                      fit: BoxFit.contain),
+                  child: Image.asset('assets/images/splash_screen_logo.png',
+                      height: 200, width: 200, fit: BoxFit.contain),
                 ),
               ),
               SizedBox(
@@ -181,13 +179,13 @@ class _NowPlayingState extends State<NowPlaying> {
                   //     color: Colors.white,
                   //   ),
                   // ),
-                  IconButton(
-                    onPressed: (() {}),
-                    icon: Icon(
-                      Icons.playlist_add,
-                      color: Colors.white,
-                    ),
-                  ),
+                  // IconButton(
+                  //   onPressed: (() {}),
+                  //   icon: Icon(
+                  //     Icons.playlist_add,
+                  //     color: Colors.white,
+                  //   ),
+                  // ),
                   IconButton(
                     onPressed: (() {
                       GetSongs.player.loopMode == LoopMode.off
@@ -196,14 +194,14 @@ class _NowPlayingState extends State<NowPlaying> {
                     }),
                     icon: StreamBuilder<LoopMode>(
                       stream: GetSongs.player.loopModeStream,
-                      builder: (BuildContext context,AsyncSnapshot snapshot) {
+                      builder: (BuildContext context, AsyncSnapshot snapshot) {
                         final loopMode = snapshot.data;
-                        if(loopMode== LoopMode.off){
+                        if (loopMode == LoopMode.off) {
                           return Icon(
                             Icons.repeat,
                             color: Colors.grey,
                           );
-                        } else{
+                        } else {
                           return Icon(
                             Icons.repeat_one,
                             color: Colors.white,

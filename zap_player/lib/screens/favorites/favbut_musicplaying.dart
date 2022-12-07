@@ -21,26 +21,26 @@ class _FavoriteButtonState extends State<FavButMusicPlaying> {
             onPressed: () {
               if (FavoriteDb.isFavor(widget.songFavoriteMusicPlaying)) {
                 FavoriteDb.delete(widget.songFavoriteMusicPlaying.id);
-                const snackBar = SnackBar(
-                  backgroundColor: Colors.red,
-                  content: Text(
-                    'Removed From Favorite',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  duration: Duration(milliseconds: 1500),
-                );
-                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                // const snackBar = SnackBar(
+                //   backgroundColor: Colors.red,
+                //   content: Text(
+                //     'Removed From Favorite',
+                //     style: TextStyle(color: Colors.white),
+                //   ),
+                //   duration: Duration(milliseconds: 1500),
+                // );
+                // ScaffoldMessenger.of(context).showSnackBar(snackBar);
               } else {
                 FavoriteDb.add(widget.songFavoriteMusicPlaying);
-                const snackbar = SnackBar(
-                  backgroundColor: Colors.red,
-                  content: Text(
-                    'Added to Favorite',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  duration: Duration(milliseconds: 350),
-                );
-                ScaffoldMessenger.of(context).showSnackBar(snackbar);
+                // const snackbar = SnackBar(
+                //   backgroundColor: Colors.red,
+                //   content: Text(
+                //     'Added to Favorite',
+                //     style: TextStyle(color: Colors.white),
+                //   ),
+                //   duration: Duration(milliseconds: 350),
+                // );
+                // ScaffoldMessenger.of(context).showSnackBar(snackbar);
               }
 
               FavoriteDb.favoriteSongs.notifyListeners();
