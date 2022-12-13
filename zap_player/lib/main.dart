@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await Hive.initFlutter();
   if (!Hive.isAdapterRegistered(MusicModelAdapter().typeId)) {
     Hive.registerAdapter(MusicModelAdapter());
@@ -17,7 +18,7 @@ Future<void> main() async {
 
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
- WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized();
   await JustAudioBackground.init(
     androidNotificationChannelId: 'com.ryanheise.bg_demo.channel.audio',
     androidNotificationChannelName: 'Audio playback',
@@ -27,7 +28,7 @@ Future<void> main() async {
   runApp(
     MaterialApp(
       theme: ThemeData(
-        scaffoldBackgroundColor: Colors.black,
+        scaffoldBackgroundColor: Colors.lightBlue,
       ),
       debugShowCheckedModeBanner: false,
       home: const SplashScreen(),

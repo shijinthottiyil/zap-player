@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:zap_player/controller/song_controller.dart';
 import 'package:zap_player/db/functions/favourite_db.dart';
+import 'package:zap_player/screens/favorites/favourites_screen.dart';
 
 import 'package:zap_player/screens/home_screen.dart';
 import 'package:zap_player/screens/miniplayer.dart';
@@ -19,13 +20,15 @@ class _BottomNavState extends State<BottomNav> {
 
   List<Widget> pages = [
     const HomePage(),
+    const FavoriteScreen(),
     const PlaylistScreen(),
-    const Settings(),
+    Settings(),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBody: true,
       body: pages[selectIndex],
       bottomNavigationBar: ValueListenableBuilder(
         valueListenable: FavoriteDb.favoriteSongs,
@@ -33,45 +36,49 @@ class _BottomNavState extends State<BottomNav> {
           return Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              if (GetSongs.player.currentIndex != null)
-                Column(
-                  children: const [
-                    MiniPlayer(),
-                  ],
-                )
-              else
-                const SizedBox(),
-              SizedBox(
-                height: 75,
-                child: BottomNavigationBar(
-                  backgroundColor: Colors.black,
-                  showUnselectedLabels: false,
-                  selectedFontSize: 10.0,
-                  // selectedIconTheme: IconThemeData(
-                  //   size: 40.0,
-                  // ),
-                  selectedItemColor: Colors.white,
-                  selectedLabelStyle: const TextStyle(
-                      fontWeight: FontWeight.bold, letterSpacing: 0.5),
-                  currentIndex: selectIndex,
-                  onTap: (value) {
-                    setState(
-                      () {
-                        selectIndex = value;
-                      },
-                    );
-                  },
-                  items: <BottomNavigationBarItem>[
-                    bottomNavBarMethod(
-                        bottomNavBarIcon: Icons.home,
-                        bottomNavBarLabel: 'HOME'),
-                    bottomNavBarMethod(
-                        bottomNavBarIcon: Icons.playlist_add_check_rounded,
-                        bottomNavBarLabel: 'PLAYLIST'),
-                    bottomNavBarMethod(
-                        bottomNavBarIcon: Icons.settings,
-                        bottomNavBarLabel: 'SETTINGS'),
-                  ],
+              GetSongs.player.currentIndex != null
+                  ? SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.085,
+                      child: const MiniPlayer(),
+                    )
+                  : const SizedBox(),
+              Theme(
+                data: Theme.of(context).copyWith(
+                  canvasColor: Colors.lightBlue,
+                ),
+                child: SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.085,
+                  child: BottomNavigationBar(
+                    elevation: 0.0,
+                    showUnselectedLabels: false,
+                    selectedFontSize: MediaQuery.of(context).size.height * 0.01,
+                    selectedItemColor: Colors.white,
+                    selectedLabelStyle: const TextStyle(
+                        fontWeight: FontWeight.bold, letterSpacing: 0.5),
+                    currentIndex: selectIndex,
+                    onTap: (value) {
+                      setState(
+                        () {
+                          selectIndex = value;
+                          FavoriteDb.favoriteSongs.notifyListeners();
+                        },
+                      );
+                    },
+                    items: <BottomNavigationBarItem>[
+                      bottomNavBarMethod(
+                          bottomNavBarIcon: Icons.home,
+                          bottomNavBarLabel: 'HOME'),
+                      bottomNavBarMethod(
+                          bottomNavBarIcon: Icons.favorite,
+                          bottomNavBarLabel: 'FAVORITE'),
+                      bottomNavBarMethod(
+                          bottomNavBarIcon: Icons.playlist_add_check_rounded,
+                          bottomNavBarLabel: 'PLAYLIST'),
+                      bottomNavBarMethod(
+                          bottomNavBarIcon: Icons.settings,
+                          bottomNavBarLabel: 'SETTINGS'),
+                    ],
+                  ),
                 ),
               ),
             ],

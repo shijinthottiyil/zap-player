@@ -22,12 +22,16 @@ class _PlaylistSongState extends State<PlaylistSongListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.black,
-        title: Text('ADD SONGS'),
-        centerTitle: true,
-      ),
-      body: FutureBuilder<List<SongModel>>(
+      body: NestedScrollView(
+        headerSliverBuilder: ((context, innerBoxIsScrolled) => [
+              const SliverAppBar(
+                backgroundColor: Colors.lightBlue,
+                elevation: 0.0,
+                floating: true,
+                snap: true,
+              )
+            ]),
+        body: FutureBuilder<List<SongModel>>(
           future: audioQuery.querySongs(
             sortType: null,
             orderType: OrderType.ASC_OR_SMALLER,
@@ -54,15 +58,14 @@ class _PlaylistSongState extends State<PlaylistSongListScreen> {
               );
             }
             return ListView.separated(
-                padding: const EdgeInsets.only(
-                  left: 10.0,
-                  right: 10.0,
-                ),
+                padding: EdgeInsets.only(
+                    left: MediaQuery.of(context).size.width * 0.025,
+                    right: MediaQuery.of(context).size.width * 0.025),
                 itemBuilder: ((ctx, index) {
                   return ListTile(
                     contentPadding: EdgeInsets.only(
-                      left: 10.0,
-                    ),
+                        left: MediaQuery.of(context).size.width * 0.025,
+                        right: MediaQuery.of(context).size.width * 0.04),
                     tileColor: Colors.white,
                     leading: QueryArtworkWidget(
                       id: item.data![index].id,
@@ -88,26 +91,45 @@ class _PlaylistSongState extends State<PlaylistSongListScreen> {
                           : item.data![index].artist.toString().toUpperCase(),
                     ),
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(40)),
-                    trailing: IconButton(
-                        onPressed: (() {
-                          setState(() {
-                            playlistCheck(item.data![index]);
-
-                            // playlistnotifier.notifyListeners();
-                            PlayListDB.playlistnotifier.notifyListeners();
-                          });
-                        }),
-                        icon: !widget.playlist.isValueIn(item.data![index].id)
-                            ? const Icon(Icons.add)
-                            : const Icon(Icons.check)),
+                      borderRadius: BorderRadius.circular(
+                          MediaQuery.of(context).size.width * 0.1),
+                    ),
+                    trailing: !widget.playlist.isValueIn(item.data![index].id)
+                        ? IconButton(
+                            onPressed: (() {
+                              setState(
+                                () {
+                                  playlistCheck(item.data![index]);
+                                  PlayListDB.playlistnotifier.notifyListeners();
+                                },
+                              );
+                            }),
+                            icon: const Icon(
+                              Icons.add,
+                              color: Colors.black,
+                            ),
+                          )
+                        : IconButton(
+                            onPressed: (() {
+                              setState(() {
+                                widget.playlist
+                                    .deleteData(item.data![index].id);
+                              });
+                            }),
+                            icon: const Icon(
+                              Icons.done,
+                              color: Colors.black,
+                            ),
+                          ),
                   );
                 }),
                 separatorBuilder: (context, index) => SizedBox(
                       height: MediaQuery.of(context).size.height * 0.01,
                     ),
                 itemCount: item.data!.length);
-          }),
+          },
+        ),
+      ),
     );
   }
 
@@ -117,13 +139,9 @@ class _PlaylistSongState extends State<PlaylistSongListScreen> {
 
       // log('song added');
 
-      // const snackbar = SnackBar(
-      //     backgroundColor: Color.fromARGB(255, 255, 255, 255),
-      //     content: Text(
-      //       'song Added to Playlist',
-      //       style: TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
-      //     ));
-      // ScaffoldMessenger.of(context).showSnackBar(snackbar);
     }
+    // else {
+    //   widget.playlist.delete();
+    // }
   }
 }

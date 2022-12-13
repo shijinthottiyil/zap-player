@@ -60,10 +60,11 @@ class _SearchPageState extends State<SearchPage> {
   Widget? getListView() {
     if (foundSongs.isNotEmpty) {
       return ListView.separated(
-          padding: const EdgeInsets.all(10),
+          padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.02),
           itemBuilder: ((context, index) {
             return ListTile(
-              contentPadding: EdgeInsets.only(left: 10.0),
+              contentPadding: EdgeInsets.only(
+                  left: MediaQuery.of(context).size.width * 0.025),
               tileColor: Colors.white,
               leading: QueryArtworkWidget(
                 id: foundSongs[index].id,
@@ -88,8 +89,10 @@ class _SearchPageState extends State<SearchPage> {
                       ? 'UNKNOWN ARTIST'
                       : foundSongs[index].artist.toString().toUpperCase()),
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(40)),
+                  borderRadius: BorderRadius.circular(
+                      MediaQuery.of(context).size.width * 0.1)),
               onTap: () {
+                GetSongs.player.pause();
                 GetSongs.player.setAudioSource(
                     GetSongs.createSongList(foundSongs),
                     initialIndex: index);
@@ -106,8 +109,7 @@ class _SearchPageState extends State<SearchPage> {
                 height: MediaQuery.of(context).size.height * 0.01,
               ),
           itemCount: foundSongs.length);
-    }
-    else{
+    } else {
       return null;
     }
   }
@@ -116,23 +118,30 @@ class _SearchPageState extends State<SearchPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.black,
+        toolbarHeight: MediaQuery.of(context).size.height * 0.08,
+        backgroundColor: Colors.lightBlue,
         elevation: 0.0,
         actions: [
           Container(
-            padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-            width: 340,
+            padding: EdgeInsets.fromLTRB(
+                0,
+                MediaQuery.of(context).size.width * 0.027,
+                MediaQuery.of(context).size.width * 0.02,
+                0),
+            width: MediaQuery.of(context).size.width * 0.88,
             child: TextField(
-              style: TextStyle(fontWeight: FontWeight.bold),
+              style: const TextStyle(fontWeight: FontWeight.bold),
               decoration: InputDecoration(
-                contentPadding: EdgeInsets.fromLTRB(50, 0, 0, 0),
+                contentPadding: EdgeInsets.only(
+                    left: MediaQuery.of(context).size.width * 0.1),
                 filled: true,
                 fillColor: Colors.white,
                 border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
+                    borderRadius: BorderRadius.circular(
+                        MediaQuery.of(context).size.width * 0.07),
                     borderSide: BorderSide.none),
                 hintText: 'Artists,songs,or albums',
-                prefixIcon: Icon(Icons.search),
+                prefixIcon: const Icon(Icons.search),
               ),
               onChanged: ((value) {
                 runFilter(value);

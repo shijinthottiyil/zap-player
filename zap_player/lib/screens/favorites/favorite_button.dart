@@ -21,26 +21,8 @@ class _FavoriteButtonState extends State<FavoriteButton> {
             onPressed: () {
               if (FavoriteDb.isFavor(widget.songFavorite)) {
                 FavoriteDb.delete(widget.songFavorite.id);
-                // const snackBar = SnackBar(
-                //   backgroundColor: Colors.red,
-                //   content: Text(
-                //     'Removed From Favorite',
-                //     style: TextStyle(color: Colors.white),
-                //   ),
-                //   duration: Duration(milliseconds: 1500),
-                // );
-                // ScaffoldMessenger.of(context).showSnackBar(snackBar);
               } else {
                 FavoriteDb.add(widget.songFavorite);
-                // const snackbar = SnackBar(
-                //   backgroundColor: Colors.red,
-                //   content: Text(
-                //     'Added to Favorite',
-                //     style: TextStyle(color: Colors.white),
-                //   ),
-                //   duration: Duration(milliseconds: 350),
-                // );
-                // ScaffoldMessenger.of(context).showSnackBar(snackbar);
               }
 
               FavoriteDb.favoriteSongs.notifyListeners();
@@ -51,7 +33,8 @@ class _FavoriteButtonState extends State<FavoriteButton> {
                     color: Colors.red[600],
                   )
                 : const Icon(
-                    Icons.favorite,
+                    Icons.favorite_border_rounded,
+                    color: Colors.black,
                   ),
           );
         });

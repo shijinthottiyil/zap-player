@@ -23,119 +23,123 @@ class _MiniPlayerState extends State<MiniPlayer> {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      tileColor: Colors.black87,
-      onTap: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => NowPlaying(
-              songModelList: GetSongs.playingSongs,
+    return Container(
+      color: Colors.redAccent,
+      child: ListTile(
+        tileColor: Colors.red,
+        onTap: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => NowPlaying(
+                songModelList: GetSongs.playingSongs,
+              ),
             ),
+          );
+        },
+        textColor: const Color.fromARGB(255, 255, 255, 255),
+        leading: QueryArtworkWidget(
+          artworkQuality: FilterQuality.high,
+          artworkFit: BoxFit.fill,
+          artworkBorder: BorderRadius.circular(0),
+          nullArtworkWidget: Image.asset(
+            'assets/images/splash_screen_logo.png',
           ),
-        );
-      },
-      textColor: const Color.fromARGB(255, 255, 255, 255),
-      leading: QueryArtworkWidget(
-        artworkQuality: FilterQuality.high,
-        artworkFit: BoxFit.fill,
-        artworkBorder: BorderRadius.circular(0),
-        nullArtworkWidget: Image.asset(
-          'assets/images/splash_screen_logo.png',
+          id: GetSongs.playingSongs[GetSongs.player.currentIndex!].id,
+          type: ArtworkType.AUDIO,
         ),
-        id: GetSongs.playingSongs[GetSongs.player.currentIndex!].id,
-        type: ArtworkType.AUDIO,
-      ),
-      title: Text(
-        GetSongs.playingSongs[GetSongs.player.currentIndex!].title
-            .toUpperCase(),
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-        style: const TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: 15,
-        ),
-      ),
-      subtitle: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Text(
-          GetSongs.playingSongs[GetSongs.player.currentIndex!].artist
-                      .toString() ==
-                  '<unknown>'
-              ? 'UNKNOWN'
-              : GetSongs.playingSongs[GetSongs.player.currentIndex!].artist
-                  .toString(),
+        title: Text(
+          GetSongs.playingSongs[GetSongs.player.currentIndex!].title
+              .toUpperCase(),
           maxLines: 1,
-          overflow: TextOverflow.fade,
-          style: const TextStyle(fontSize: 11, overflow: TextOverflow.ellipsis),
+          overflow: TextOverflow.ellipsis,
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 15,
+          ),
         ),
-      ),
-      trailing: FittedBox(
-        fit: BoxFit.fill,
-        child: Row(
-          children: [
-            IconButton(
+        subtitle: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Text(
+            GetSongs.playingSongs[GetSongs.player.currentIndex!].artist
+                        .toString() ==
+                    '<unknown>'
+                ? 'UNKNOWN'
+                : GetSongs.playingSongs[GetSongs.player.currentIndex!].artist
+                    .toString(),
+            maxLines: 1,
+            overflow: TextOverflow.fade,
+            style:
+                const TextStyle(fontSize: 11, overflow: TextOverflow.ellipsis),
+          ),
+        ),
+        trailing: FittedBox(
+          fit: BoxFit.fill,
+          child: Row(
+            children: [
+              IconButton(
+                  onPressed: () async {
+                    if (GetSongs.player.hasPrevious) {
+                      await GetSongs.player.seekToPrevious();
+                      await GetSongs.player.play();
+                    } else {
+                      await GetSongs.player.play();
+                    }
+                  },
+                  icon: Icon(
+                    Icons.skip_previous_sharp,
+                    color: Colors.white,
+                    size: MediaQuery.of(context).size.width * 0.09,
+                  )),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.black87,
+                  shape: const CircleBorder(),
+                ),
                 onPressed: () async {
-                  if (GetSongs.player.hasPrevious) {
-                    await GetSongs.player.seekToPrevious();
-                    await GetSongs.player.play();
+                  if (GetSongs.player.playing) {
+                    await GetSongs.player.pause();
+                    setState(() {});
                   } else {
                     await GetSongs.player.play();
+                    setState(() {});
                   }
                 },
-                icon: const Icon(
-                  Icons.skip_previous_sharp,
-                  color: Colors.white,
-                  size: 35,
-                )),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.black87,
-                shape: const CircleBorder(),
+                child: StreamBuilder<bool>(
+                  stream: GetSongs.player.playingStream,
+                  builder: (context, snapshot) {
+                    bool? playingStage = snapshot.data;
+                    if (playingStage != null && playingStage) {
+                      return Icon(
+                        Icons.pause,
+                        color: Colors.white,
+                        size: MediaQuery.of(context).size.width * 0.09,
+                      );
+                    } else {
+                      return Icon(
+                        Icons.play_arrow,
+                        color: Colors.white,
+                        size: MediaQuery.of(context).size.width * 0.09,
+                      );
+                    }
+                  },
+                ),
               ),
-              onPressed: () async {
-                if (GetSongs.player.playing) {
-                  await GetSongs.player.pause();
-                  setState(() {});
-                } else {
-                  await GetSongs.player.play();
-                  setState(() {});
-                }
-              },
-              child: StreamBuilder<bool>(
-                stream: GetSongs.player.playingStream,
-                builder: (context, snapshot) {
-                  bool? playingStage = snapshot.data;
-                  if (playingStage != null && playingStage) {
-                    return const Icon(
-                      Icons.pause,
-                      color: Colors.white,
-                      size: 35,
-                    );
-                  } else {
-                    return const Icon(
-                      Icons.play_arrow,
-                      color: Colors.white,
-                      size: 35,
-                    );
-                  }
-                },
-              ),
-            ),
-            IconButton(
-                onPressed: (() async {
-                  if (GetSongs.player.hasNext) {
-                    await GetSongs.player.seekToNext();
-                    await GetSongs.player.play();
-                  } else {
-                    await GetSongs.player.play();
-                  }
-                }),
-                icon: const Icon(
-                  Icons.skip_next_sharp,
-                  color: Colors.white,
-                  size: 35,
-                )),
-          ],
+              IconButton(
+                  onPressed: (() async {
+                    if (GetSongs.player.hasNext) {
+                      await GetSongs.player.seekToNext();
+                      await GetSongs.player.play();
+                    } else {
+                      await GetSongs.player.play();
+                    }
+                  }),
+                  icon: Icon(
+                    Icons.skip_next_sharp,
+                    color: Colors.white,
+                    size: MediaQuery.of(context).size.width * 0.09,
+                  )),
+            ],
+          ),
         ),
       ),
     );
