@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:zap_player/db/functions/favourite_db.dart';
@@ -8,6 +6,7 @@ import 'package:zap_player/screens/splash_screen.dart';
 
 class PlayListDB {
   static ValueNotifier<List<MusicModel>> playlistnotifier = ValueNotifier([]);
+
 //  ValueNotifier<List<MusicModel>> viewPlaylistnotifier = ValueNotifier([]);
 
   static Future<void> playlistAdd(MusicModel value) async {
@@ -21,7 +20,7 @@ class PlayListDB {
     final playListDb = Hive.box<MusicModel>('playlistDB');
     playlistnotifier.value.clear();
     playlistnotifier.value.addAll(playListDb.values);
-    log('song added');
+
     playlistnotifier.notifyListeners();
   }
 
@@ -45,11 +44,4 @@ class PlayListDB {
         ),
         (route) => false);
   }
-  // Future<void> getAllPlaylistSongs() async {
-  //   final playListDb = Hive.box<MusicModel>('playlistDB');
-  //   viewPlaylistnotifier.value.clear();
-  //   viewPlaylistnotifier.value.addAll(playListDb.values);
-
-  //   viewPlaylistnotifier.notifyListeners();
-  // }
 }
