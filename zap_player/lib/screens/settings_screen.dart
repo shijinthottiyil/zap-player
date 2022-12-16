@@ -8,7 +8,7 @@ class Settings extends StatelessWidget {
 
   final List<String> leading = [
     'assets/images/about_us_logo.png',
-    'assets/images/privacy_policy_logo.png',
+    'assets/images/privacy_policy_logo (2).png',
     'assets/images/reset_app_logo.png'
   ];
 
@@ -93,14 +93,7 @@ You must not:
                   onPressed: (() {
                     PlayListDB.resetAPP(context);
                     GetSongs.player.stop();
-                  }
-                      //   () {
-                      //   if (GetSongs.player.playing) {
-                      //     GetSongs.player.pause();
-                      //   }
-                      //   PlayListDB.resetAPP(context);
-                      // }
-                      ),
+                  }),
                   icon: const Icon(
                     Icons.done,
                     color: Colors.white,
@@ -126,6 +119,7 @@ You must not:
               leading: Image.asset(
                 leading[index],
                 height: MediaQuery.of(context).size.height * 0.05,
+                color: Colors.white,
               ),
               title: Text(
                 names[index],

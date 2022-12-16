@@ -12,9 +12,9 @@ class FavoriteScreen extends StatelessWidget {
     return ValueListenableBuilder(
       valueListenable: FavoriteDb.favoriteSongs,
       builder: (BuildContext ctx, List<SongModel> favoriteData, Widget? child) {
-        return Scaffold(
-          body: SafeArea(
-            child: ValueListenableBuilder(
+        return SafeArea(
+          child: Scaffold(
+            body: ValueListenableBuilder(
               valueListenable: FavoriteDb.favoriteSongs,
               builder: (BuildContext ctx, List<SongModel> favoriteData,
                   Widget? child) {
@@ -29,8 +29,10 @@ class FavoriteScreen extends StatelessWidget {
                 } else {
                   return ListView.separated(
                       padding: EdgeInsets.only(
-                          left: MediaQuery.of(context).size.width * 0.025,
-                          right: MediaQuery.of(context).size.width * 0.025),
+                        left: MediaQuery.of(context).size.width * 0.025,
+                        right: MediaQuery.of(context).size.width * 0.025,
+                        top: MediaQuery.of(context).size.width * 0.025,
+                      ),
                       itemBuilder: ((ctx, index) {
                         return ListTile(
                           contentPadding: EdgeInsets.only(

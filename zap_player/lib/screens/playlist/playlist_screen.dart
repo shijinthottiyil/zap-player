@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:zap_player/db/functions/playlist_db.dart';
@@ -45,7 +47,7 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                         title: Text(
                           data.name,
                           style: const TextStyle(color: Colors.white),
-                          textAlign: TextAlign.center,
+                          textAlign: TextAlign.start,
                         ),
                         trailing: IconButton(
                           onPressed: () {
@@ -121,7 +123,7 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                     }),
                     itemCount: musicList.length),
             floatingActionButtonLocation:
-                FloatingActionButtonLocation.startFloat,
+                FloatingActionButtonLocation.centerDocked,
             floatingActionButton: FloatingActionButton(
               backgroundColor: Colors.purple,
               onPressed: (() {
@@ -198,7 +200,6 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                                   onPressed: (() {
                                     if (_formKey.currentState!.validate()) {
                                       whenButtonClicked();
-                                      Navigator.pop(context);
                                     }
                                   }),
                                   icon: const Icon(
@@ -225,15 +226,32 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
 
   Future<void> whenButtonClicked() async {
     final name = nameController.text.trim();
+    final music = MusicModel(
+      songId: [],
+      name: name,
+    );
+    final data =
+        PlayListDB.playListDb.values.map((e) => e.name.trim()).toList();
+
     if (name.isEmpty) {
       return;
-    } else {
-      final music = MusicModel(
-        songId: [],
-        name: name,
+    } else if (data.contains(music.name)) {
+      SnackBar snackBar = SnackBar(
+        behavior: SnackBarBehavior.floating,
+        width: 200.0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.0),
+        ),
+        content: const Text(
+          'Name Unavilable',
+          textAlign: TextAlign.center,
+        ),
       );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    } else {
       PlayListDB.playlistAdd(music);
       nameController.clear();
+      Navigator.pop(context);
     }
   }
 }

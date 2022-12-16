@@ -44,15 +44,15 @@ class _BottomNavState extends State<BottomNav> {
                   : const SizedBox(),
               Theme(
                 data: Theme.of(context).copyWith(
-                  canvasColor: Colors.lightBlue,
+                  canvasColor: Colors.black,
                 ),
                 child: SizedBox(
                   height: MediaQuery.of(context).size.height * 0.085,
                   child: BottomNavigationBar(
-                    elevation: 0.0,
                     showUnselectedLabels: false,
+                    unselectedItemColor: Colors.white,
                     selectedFontSize: MediaQuery.of(context).size.height * 0.01,
-                    selectedItemColor: Colors.white,
+                    selectedItemColor: Colors.red,
                     selectedLabelStyle: const TextStyle(
                         fontWeight: FontWeight.bold, letterSpacing: 0.5),
                     currentIndex: selectIndex,
@@ -72,7 +72,7 @@ class _BottomNavState extends State<BottomNav> {
                           bottomNavBarIcon: Icons.favorite,
                           bottomNavBarLabel: 'FAVORITE'),
                       bottomNavBarMethod(
-                          bottomNavBarIcon: Icons.playlist_add_check_rounded,
+                          bottomNavBarIcon: Icons.queue_music,
                           bottomNavBarLabel: 'PLAYLIST'),
                       bottomNavBarMethod(
                           bottomNavBarIcon: Icons.settings,
@@ -93,7 +93,6 @@ class _BottomNavState extends State<BottomNav> {
     return BottomNavigationBarItem(
         icon: Icon(
           bottomNavBarIcon,
-          color: Colors.white,
         ),
         label: bottomNavBarLabel);
   }

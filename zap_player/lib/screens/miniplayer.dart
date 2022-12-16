@@ -24,7 +24,7 @@ class _MiniPlayerState extends State<MiniPlayer> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.redAccent,
+      color: Colors.grey,
       child: ListTile(
         tileColor: Colors.red,
         onTap: () {

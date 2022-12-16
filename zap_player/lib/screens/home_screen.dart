@@ -43,18 +43,18 @@ class _HomePageState extends State<HomePage> {
         // floatHeaderSlivers: true,
         headerSliverBuilder: ((context, innerBoxIsScrolled) => [
               SliverAppBar(
-                backgroundColor: Colors.lightBlue,
+                backgroundColor: Colors.black,
                 elevation: 0,
-                expandedHeight: MediaQuery.of(context).size.height * 0.22,
-                flexibleSpace: const FlexibleSpaceBar(
+                expandedHeight: MediaQuery.of(context).size.height * 0.12,
+                flexibleSpace: FlexibleSpaceBar(
                   centerTitle: true,
                   title: Text(
                     'ZAP PLAYER',
-                    textAlign: TextAlign.start,
+                    style: TextStyle(
+                        fontSize: MediaQuery.of(context).size.width * 0.04),
                   ),
                 ),
-                // floating: true,
-                // snap: true,
+                pinned: true,
                 actions: [
                   IconButton(
                       onPressed: () {
@@ -86,13 +86,14 @@ class _HomePageState extends State<HomePage> {
                 );
               } else if (item.data!.isEmpty) {
                 return const Center(
-                    child: Text(
-                  "No Songs Found",
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.bold),
-                ));
+                  child: Text(
+                    "No Songs Found",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold),
+                  ),
+                );
               } else {
                 HomePage.startSong = item.data!;
                 GetSongs.songscopy = item.data!;

@@ -28,7 +28,8 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xff020548),
+      // backgroundColor: const Color(0xff020548),
+      backgroundColor: Colors.black,
       body: Center(
         child: Image.asset(
           'assets/images/zap_player_logo.png',

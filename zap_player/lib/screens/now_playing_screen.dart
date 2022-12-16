@@ -65,7 +65,7 @@ class _NowPlayingState extends State<NowPlaying> {
           appBar: AppBar(
             title: const Text('NOW PLAYING'),
             centerTitle: true,
-            backgroundColor: Colors.lightBlue,
+            backgroundColor: Colors.black,
             elevation: 0,
             leading: IconButton(
               onPressed: (() {

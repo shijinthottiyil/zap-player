@@ -18,7 +18,7 @@ Future<void> main() async {
 
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
-  WidgetsFlutterBinding.ensureInitialized();
+  // WidgetsFlutterBinding.ensureInitialized();
   await JustAudioBackground.init(
     androidNotificationChannelId: 'com.ryanheise.bg_demo.channel.audio',
     androidNotificationChannelName: 'Audio playback',
@@ -28,7 +28,7 @@ Future<void> main() async {
   runApp(
     MaterialApp(
       theme: ThemeData(
-        scaffoldBackgroundColor: Colors.lightBlue,
+        scaffoldBackgroundColor: Colors.black,
       ),
       debugShowCheckedModeBanner: false,
       home: const SplashScreen(),

@@ -33,7 +33,7 @@ class _FavoriteButtonState extends State<FavButMusicPlaying> {
                     color: Colors.red,
                   )
                 : const Icon(
-                    Icons.favorite,
+                    Icons.favorite_border,
                     color: Colors.white,
                   ),
           );

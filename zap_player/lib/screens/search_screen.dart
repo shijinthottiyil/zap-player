@@ -119,7 +119,7 @@ class _SearchPageState extends State<SearchPage> {
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: MediaQuery.of(context).size.height * 0.08,
-        backgroundColor: Colors.lightBlue,
+        backgroundColor: Colors.black,
         elevation: 0.0,
         actions: [
           Container(

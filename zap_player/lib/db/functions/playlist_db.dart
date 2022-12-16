@@ -6,6 +6,7 @@ import 'package:zap_player/screens/splash_screen.dart';
 
 class PlayListDB {
   static ValueNotifier<List<MusicModel>> playlistnotifier = ValueNotifier([]);
+  static final playListDb = Hive.box<MusicModel>('playlistDb');
 
 //  ValueNotifier<List<MusicModel>> viewPlaylistnotifier = ValueNotifier([]);
 
