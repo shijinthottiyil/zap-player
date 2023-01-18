@@ -1,13 +1,13 @@
-// import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:zap_player/controller/song_controller.dart';
 import 'package:zap_player/db/functions/playlist_db.dart';
 import 'package:zap_player/db/model/music_model.dart';
-import 'package:zap_player/screens/now_playing_screen.dart';
-import 'package:zap_player/screens/playlist/playlist_song_list.dart';
+import 'package:zap_player/view/screens/now_playing_screen.dart';
+import 'package:zap_player/view/screens/playlist/playlist_song_list.dart';
+
+import '../../widgets/widget_listtile_playlist_favorite.dart';
 
 class PlaylistSongDisplayScreen extends StatefulWidget {
   const PlaylistSongDisplayScreen(
@@ -25,13 +25,13 @@ class _PlaylistSongDisplayScreenState extends State<PlaylistSongDisplayScreen> {
   @override
   void initState() {
     PlayListDB.getAllPlaylist();
-    // log('dtgy');
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    // PlayListDB.getAllPlaylist();
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
     return SafeArea(
       child: Scaffold(
         body: NestedScrollView(
@@ -68,8 +68,6 @@ class _PlaylistSongDisplayScreenState extends State<PlaylistSongDisplayScreen> {
                   value.values.toList()[widget.folderindex].songId,
                 );
 
-                // log(playlistsong.toString());
-
                 return playlistsong.isEmpty
                     ? const Center(
                         child: Text(
@@ -82,46 +80,20 @@ class _PlaylistSongDisplayScreenState extends State<PlaylistSongDisplayScreen> {
                       )
                     : ListView.separated(
                         padding: EdgeInsets.only(
-                            left: MediaQuery.of(context).size.width * 0.025,
-                            right: MediaQuery.of(context).size.width * 0.025),
+                          left: width * 0.025,
+                          right: width * 0.025,
+                        ),
                         itemBuilder: ((context, index) {
-                          return ListTile(
-                            contentPadding: EdgeInsets.only(
-                                left: MediaQuery.of(context).size.width * 0.025,
-                                right:
-                                    MediaQuery.of(context).size.width * 0.04),
-                            tileColor: Colors.white,
-                            leading: QueryArtworkWidget(
-                              id: playlistsong[index].id,
-                              type: ArtworkType.AUDIO,
-                              nullArtworkWidget: CircleAvatar(
-                                  backgroundColor: Colors.transparent,
-                                  child: Image.asset(
-                                    'assets/images/default_music_logo.png',
-                                  )),
-                            ),
-                            title: Text(
-                              playlistsong[index].title.toUpperCase(),
-                              maxLines: 1,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                overflow: TextOverflow.fade,
-                              ),
-                            ),
-                            subtitle: Text(
-                              maxLines: 1,
-                              playlistsong[index].artist.toString() ==
-                                      '<unknown>'
-                                  ? 'UNKNOWN ARTIST'
-                                  : playlistsong[index]
-                                      .artist
-                                      .toString()
-                                      .toUpperCase(),
-                            ),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(
-                                    MediaQuery.of(context).size.width * 0.1)),
-                            onTap: () {
+                          return WidgetListTilePlayListFavorite(
+                            id: playlistsong[index].id,
+                            title: playlistsong[index].title,
+                            artist: playlistsong[index].artist.toString(),
+                            trailingAction: (() {
+                              widget.playlist.deleteData(
+                                playlistsong[index].id,
+                              );
+                            }),
+                            onTapFn: () {
                               List<SongModel> newlist = [...playlistsong];
                               GetSongs.player.stop();
                               GetSongs.player.setAudioSource(
@@ -135,20 +107,14 @@ class _PlaylistSongDisplayScreenState extends State<PlaylistSongDisplayScreen> {
                                 );
                               })));
                             },
-                            trailing: IconButton(
-                                onPressed: (() {
-                                  widget.playlist.deleteData(
-                                    playlistsong[index].id,
-                                  );
-                                }),
-                                icon: const Icon(
-                                  Icons.delete,
-                                  color: Colors.black,
-                                )),
+                            iconData: const Icon(
+                              Icons.delete,
+                              color: Colors.black,
+                            ),
                           );
                         }),
                         separatorBuilder: (context, index) => SizedBox(
-                              height: MediaQuery.of(context).size.height * 0.01,
+                              height: height * 0.01,
                             ),
                         itemCount: playlistsong.length);
               }),
@@ -163,14 +129,13 @@ class _PlaylistSongDisplayScreenState extends State<PlaylistSongDisplayScreen> {
     List<SongModel> plsongs = [];
 
     for (int i = 0; i < GetSongs.songscopy.length; i++) {
-      // log(GetSongs.songscopy.isEmpty.toString());
       for (int j = 0; j < data.length; j++) {
         if (GetSongs.songscopy[i].id == data[j]) {
           plsongs.add(GetSongs.songscopy[i]);
         }
       }
     }
-    // log(plsongs.isEmpty.toString());
+
     return plsongs;
   }
 }

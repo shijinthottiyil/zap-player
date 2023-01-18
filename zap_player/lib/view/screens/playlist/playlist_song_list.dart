@@ -1,26 +1,29 @@
-// import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:on_audio_query/on_audio_query.dart';
-// import 'package:zap_player/controller/song_controller.dart';
-import 'package:zap_player/db/functions/playlist_db.dart';
 import 'package:zap_player/db/model/music_model.dart';
+import 'package:provider/provider.dart';
 
-class PlaylistSongListScreen extends StatefulWidget {
-  const PlaylistSongListScreen({Key? key, required this.playlist})
-      : super(key: key);
+import '../../../controller/provider/provider_playlist_song_list.dart';
+
+class PlaylistSongListScreen extends StatelessWidget {
+  PlaylistSongListScreen({Key? key, required this.playlist}) : super(key: key);
 
   final MusicModel playlist;
 
-  @override
-  State<PlaylistSongListScreen> createState() => _PlaylistSongState();
-}
-
-class _PlaylistSongState extends State<PlaylistSongListScreen> {
   final OnAudioQuery audioQuery = OnAudioQuery();
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
+    WidgetsBinding.instance.addPostFrameCallback(
+      (timeStamp) {
+        Provider.of<ProviderPlaylistSongList>(
+          context,
+          listen: false,
+        ).notifyListeners();
+      },
+    );
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
@@ -53,13 +56,13 @@ class _PlaylistSongState extends State<PlaylistSongListScreen> {
           }
           return ListView.separated(
               padding: EdgeInsets.only(
-                  left: MediaQuery.of(context).size.width * 0.025,
-                  right: MediaQuery.of(context).size.width * 0.025),
+                left: width * 0.025,
+                right: width * 0.025,
+              ),
               itemBuilder: ((ctx, index) {
                 return ListTile(
-                  contentPadding: EdgeInsets.only(
-                      left: MediaQuery.of(context).size.width * 0.025,
-                      right: MediaQuery.of(context).size.width * 0.04),
+                  contentPadding:
+                      EdgeInsets.only(left: width * 0.025, right: width * 0.04),
                   tileColor: Colors.white,
                   leading: QueryArtworkWidget(
                     id: item.data![index].id,
@@ -85,18 +88,16 @@ class _PlaylistSongState extends State<PlaylistSongListScreen> {
                         : item.data![index].artist.toString().toUpperCase(),
                   ),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(
-                        MediaQuery.of(context).size.width * 0.1),
+                    borderRadius: BorderRadius.circular(width * 0.1),
                   ),
-                  trailing: !widget.playlist.isValueIn(item.data![index].id)
+                  trailing: !playlist.isValueIn(item.data![index].id)
                       ? IconButton(
                           onPressed: (() {
-                            setState(
-                              () {
-                                playlistCheck(item.data![index]);
-                                PlayListDB.playlistnotifier.notifyListeners();
-                              },
-                            );
+                            playlistCheck(item.data![index]);
+                            Provider.of<ProviderPlaylistSongList>(
+                              context,
+                              listen: false,
+                            ).notifyListeners();
                           }),
                           icon: const Icon(
                             Icons.add,
@@ -104,11 +105,13 @@ class _PlaylistSongState extends State<PlaylistSongListScreen> {
                           ),
                         )
                       : IconButton(
-                          onPressed: (() {
-                            setState(() {
-                              widget.playlist.deleteData(item.data![index].id);
-                            });
-                          }),
+                          onPressed: () {
+                            playlist.deleteData(item.data![index].id);
+                            Provider.of<ProviderPlaylistSongList>(
+                              context,
+                              listen: false,
+                            ).notifyListeners();
+                          },
                           icon: const Icon(
                             Icons.done,
                             color: Colors.black,
@@ -117,7 +120,7 @@ class _PlaylistSongState extends State<PlaylistSongListScreen> {
                 );
               }),
               separatorBuilder: (context, index) => SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.01,
+                    height: height * 0.01,
                   ),
               itemCount: item.data!.length);
         },
@@ -126,14 +129,8 @@ class _PlaylistSongState extends State<PlaylistSongListScreen> {
   }
 
   void playlistCheck(SongModel data) {
-    if (!widget.playlist.isValueIn(data.id)) {
-      widget.playlist.add(data.id);
-
-      // log('song added');
-
+    if (!playlist.isValueIn(data.id)) {
+      playlist.add(data.id);
     }
-    // else {
-    //   widget.playlist.delete();
-    // }
   }
 }

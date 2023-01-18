@@ -1,24 +1,24 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:zap_player/db/functions/playlist_db.dart';
 import 'package:zap_player/db/model/music_model.dart';
-import 'package:zap_player/screens/playlist/playlist_song_display.dart';
+import 'package:zap_player/view/screens/playlist/playlist_song_display.dart';
+import 'package:provider/provider.dart';
 
-class PlaylistScreen extends StatefulWidget {
-  const PlaylistScreen({super.key});
+import '../../../controller/provider/provider_playlist_screen.dart';
 
-  @override
-  State<PlaylistScreen> createState() => _PlaylistScreenState();
-}
+class PlaylistScreen extends StatelessWidget {
+  PlaylistScreen({super.key});
 
-final nameController = TextEditingController();
-final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-class _PlaylistScreenState extends State<PlaylistScreen> {
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
+    final providerWOL = Provider.of<ProviderPlaylistScreen>(
+      context,
+      listen: false,
+    );
     FocusManager.instance.primaryFocus?.unfocus();
     return ValueListenableBuilder(
       valueListenable: Hive.box<MusicModel>('playlistDB').listenable(),
@@ -37,13 +37,16 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                     ),
                   )
                 : ListView.separated(
-                    padding: EdgeInsets.all(
-                        MediaQuery.of(context).size.width * 0.02),
-                    itemBuilder: ((BuildContext context, int index) {
+                    padding: EdgeInsets.all(width * 0.02),
+                    itemBuilder: ((
+                      BuildContext context,
+                      int index,
+                    ) {
                       final data = musicList.values.toList()[index];
                       return ListTile(
                         leading: Image.asset(
-                            'assets/images/music-playlist-icon-19.jpg'),
+                          'assets/images/music-playlist-icon-19.jpg',
+                        ),
                         title: Text(
                           data.name,
                           style: const TextStyle(color: Colors.white),
@@ -89,8 +92,8 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                                   backgroundColor: Colors.lightBlue,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(
-                                        MediaQuery.of(context).size.width *
-                                            0.05),
+                                      width * 0.05,
+                                    ),
                                   ),
                                 );
                               }),
@@ -121,7 +124,8 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                         color: Colors.white,
                       );
                     }),
-                    itemCount: musicList.length),
+                    itemCount: musicList.length,
+                  ),
             floatingActionButtonLocation:
                 FloatingActionButtonLocation.centerDocked,
             floatingActionButton: FloatingActionButton(
@@ -138,15 +142,16 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                       ),
                       child: Container(
                         padding: const EdgeInsets.all(20.0),
-                        height: MediaQuery.of(context).size.height * 0.22,
+                        height: height * 0.22,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             const Text(
                               'Create New Playlist',
                               style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold),
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                             Form(
                               key: _formKey,
@@ -154,7 +159,7 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                                 style: const TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold),
-                                controller: nameController,
+                                controller: providerWOL.nameController,
                                 decoration: InputDecoration(
                                   focusedBorder: OutlineInputBorder(
                                     borderSide: const BorderSide(
@@ -162,8 +167,8 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                                       color: Colors.red,
                                     ),
                                     borderRadius: BorderRadius.circular(
-                                        MediaQuery.of(context).size.width *
-                                            0.1),
+                                      width * 0.1,
+                                    ),
                                   ),
                                   enabledBorder: OutlineInputBorder(
                                     borderSide: const BorderSide(
@@ -171,8 +176,8 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                                       color: Colors.white,
                                     ),
                                     borderRadius: BorderRadius.circular(
-                                        MediaQuery.of(context).size.width *
-                                            0.1),
+                                      width * 0.1,
+                                    ),
                                   ),
                                 ),
                                 validator: (value) {
@@ -199,7 +204,7 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                                 IconButton(
                                   onPressed: (() {
                                     if (_formKey.currentState!.validate()) {
-                                      whenButtonClicked();
+                                      providerWOL.whenButtonClicked(context);
                                     }
                                   }),
                                   icon: const Icon(
@@ -222,36 +227,5 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
         );
       }),
     );
-  }
-
-  Future<void> whenButtonClicked() async {
-    final name = nameController.text.trim();
-    final music = MusicModel(
-      songId: [],
-      name: name,
-    );
-    final data =
-        PlayListDB.playListDb.values.map((e) => e.name.trim()).toList();
-
-    if (name.isEmpty) {
-      return;
-    } else if (data.contains(music.name)) {
-      SnackBar snackBar = SnackBar(
-        behavior: SnackBarBehavior.floating,
-        width: 200.0,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.0),
-        ),
-        content: const Text(
-          'Name Unavilable',
-          textAlign: TextAlign.center,
-        ),
-      );
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    } else {
-      PlayListDB.playlistAdd(music);
-      nameController.clear();
-      Navigator.pop(context);
-    }
   }
 }

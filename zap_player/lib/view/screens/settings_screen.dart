@@ -14,6 +14,8 @@ class Settings extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
     List<void Function()> function = [
       () {
         showDialog(
@@ -102,8 +104,7 @@ You must not:
               ],
               backgroundColor: Colors.lightBlue,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(
-                    MediaQuery.of(context).size.width * 0.05),
+                borderRadius: BorderRadius.circular(width * 0.05),
               ),
             );
           }),
@@ -113,19 +114,20 @@ You must not:
     return SafeArea(
       child: Scaffold(
         body: ListView.separated(
-          padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.02),
+          padding: EdgeInsets.all(width * 0.02),
           itemBuilder: (BuildContext context, int index) {
             return ListTile(
               leading: Image.asset(
                 leading[index],
-                height: MediaQuery.of(context).size.height * 0.05,
+                height: height * 0.05,
                 color: Colors.white,
               ),
               title: Text(
                 names[index],
                 style: TextStyle(
-                    color: Colors.white,
-                    fontSize: MediaQuery.of(context).size.width * 0.035),
+                  color: Colors.white,
+                  fontSize: width * 0.035,
+                ),
               ),
               onTap: function[index],
             );
@@ -141,8 +143,9 @@ You must not:
           'V 1.0.0',
           textAlign: TextAlign.center,
           style: TextStyle(
-              color: Colors.white,
-              fontSize: MediaQuery.of(context).size.width * 0.025),
+            color: Colors.white,
+            fontSize: width * 0.025,
+          ),
         ),
       ),
     );

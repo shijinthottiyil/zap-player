@@ -2,34 +2,33 @@ import 'package:flutter/material.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:zap_player/controller/song_controller.dart';
 import 'package:zap_player/db/functions/favourite_db.dart';
-import 'package:zap_player/screens/favorites/favourites_screen.dart';
+import 'package:zap_player/view/screens/favorites/favourites_screen.dart';
+import 'package:zap_player/view/screens/home_screen.dart';
+import 'package:zap_player/view/screens/miniplayer.dart';
+import 'package:zap_player/view/screens/playlist/playlist_screen.dart';
+import 'package:zap_player/view/screens/settings_screen.dart';
+import 'package:provider/provider.dart';
 
-import 'package:zap_player/screens/home_screen.dart';
-import 'package:zap_player/screens/miniplayer.dart';
-import 'package:zap_player/screens/playlist/playlist_screen.dart';
-import 'package:zap_player/screens/settings_screen.dart';
+import '../../controller/provider/provider_bottom_nav.dart';
 
-class BottomNav extends StatefulWidget {
-  const BottomNav({super.key});
-  @override
-  State<BottomNav> createState() => _BottomNavState();
-}
+class BottomNav extends StatelessWidget {
+  BottomNav({super.key});
 
-class _BottomNavState extends State<BottomNav> {
-  int selectIndex = 0;
-
-  List<Widget> pages = [
-    const HomePage(),
+  final List<Widget> pages = [
+    HomePage(),
     const FavoriteScreen(),
-    const PlaylistScreen(),
+    PlaylistScreen(),
     Settings(),
   ];
 
   @override
   Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.height;
+
+    final providerBottomnav = Provider.of<ProviderBottomNav>(context);
     return Scaffold(
       extendBody: true,
-      body: pages[selectIndex],
+      body: pages[providerBottomnav.selectIndex],
       bottomNavigationBar: ValueListenableBuilder(
         valueListenable: FavoriteDb.favoriteSongs,
         builder: (BuildContext context, List<SongModel> music, Widget? child) {
@@ -38,7 +37,7 @@ class _BottomNavState extends State<BottomNav> {
             children: [
               GetSongs.player.currentIndex != null
                   ? SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.085,
+                      height: height * 0.085,
                       child: const MiniPlayer(),
                     )
                   : const SizedBox(),
@@ -47,22 +46,20 @@ class _BottomNavState extends State<BottomNav> {
                   canvasColor: Colors.black,
                 ),
                 child: SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.085,
+                  height: height * 0.085,
                   child: BottomNavigationBar(
                     showUnselectedLabels: false,
                     unselectedItemColor: Colors.white,
-                    selectedFontSize: MediaQuery.of(context).size.height * 0.01,
+                    selectedFontSize: height * 0.01,
                     selectedItemColor: Colors.red,
                     selectedLabelStyle: const TextStyle(
                         fontWeight: FontWeight.bold, letterSpacing: 0.5),
-                    currentIndex: selectIndex,
+                    currentIndex: providerBottomnav.selectIndex,
                     onTap: (value) {
-                      setState(
-                        () {
-                          selectIndex = value;
-                          FavoriteDb.favoriteSongs.notifyListeners();
-                        },
-                      );
+                      Provider.of<ProviderBottomNav>(
+                        context,
+                        listen: false,
+                      ).onTapFn(value);
                     },
                     items: <BottomNavigationBarItem>[
                       bottomNavBarMethod(

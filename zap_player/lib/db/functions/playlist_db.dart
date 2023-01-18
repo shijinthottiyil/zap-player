@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:zap_player/db/functions/favourite_db.dart';
 import 'package:zap_player/db/model/music_model.dart';
-import 'package:zap_player/screens/splash_screen.dart';
+import 'package:zap_player/view/screens/splash_screen.dart';
 
 class PlayListDB {
   static ValueNotifier<List<MusicModel>> playlistnotifier = ValueNotifier([]);
